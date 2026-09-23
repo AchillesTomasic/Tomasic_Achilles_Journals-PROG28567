@@ -22,13 +22,26 @@ public class Player : MonoBehaviour
     // used for the coroutine assignment provided in class //
     public float bombSpawnWaitTime = 3f; // time for the bomb to wait before spawning
     private IEnumerator bombWaitCoroutine; // coroutine for the bomb
+    [Space(10)]
+    ////////////////////
+    // week 3 content //
+    ////////////////////
+    #region Week3Content
+
+    private Vector3 velocity;
+    public float maxSpeed; // max speed of the ship
+    public float accelerationTime; // player will reach this speed after an inteval of time
+    public float acceleration; // intreval that the velocity moves by over time
+#endregion
+
     void Start()
     {
-       
+        acceleration = maxSpeed / accelerationTime; // sets a value for the acceleration to change by
     }
     // Update is called once per frame
     void Update()
     {
+        PlayerMovement(); // used to move the player
         // checks if the b key is pressed
         if (Keyboard.current.bKey.wasPressedThisFrame)
         {
@@ -52,16 +65,37 @@ public class Player : MonoBehaviour
             WarpPlayer(enemyTransform,ratio);// warps the player a set distance based on the ratio to the enemy
         }
         DetectAsteroids(MaxRange, asteroidTransforms); // detects if asteroids are a certian distance from the player
+        
     }
+    // used to move the player using their velocity
     public void PlayerMovement()
     {
+        // handles input that changes the velocity
         if (Keyboard.current.leftArrowKey.isPressed)
         {
-            transform.position += new Vector3(1, 0, 0) * Time.deltaTime;
+            velocity += Time.deltaTime * acceleration  * Vector3.left;
+            //velocity = new Vector3(-1, 0, 0); // moves left along x
         }
-        if (Keyboard.current.rightArrowKey.isPressed)
+        else if (Keyboard.current.rightArrowKey.isPressed)
         {
-            transform.position += new Vector3(1, 0, 0) * Time.deltaTime;
+            velocity += Time.deltaTime * acceleration * Vector3.right;
+            //velocity = new Vector3(1, 0, 0);// moves right along x
+        }
+        else if (Keyboard.current.upArrowKey.isPressed)
+        {
+            velocity += Time.deltaTime * acceleration * Vector3.up;
+            //velocity = new Vector3(0, 1, 0); // moves up along y
+        }
+        else if (Keyboard.current.downArrowKey.isPressed)
+        {
+            velocity += Time.deltaTime * acceleration * Vector3.down;// moves
+            //velocity = new Vector3(0, -1, 0); //moves down along y
+        }
+        transform.position += velocity * Time.deltaTime; //moves player over vecloity and time
+        //transform.position += velocity * Time.deltaTime * shipSpeed; // changes the players movement
+        if (velocity.magnitude > maxSpeed)
+        {
+            velocity = maxSpeed * velocity.normalized;
         }
     }
     //detects if an asteroid is in range then draws a line to that asteroid
