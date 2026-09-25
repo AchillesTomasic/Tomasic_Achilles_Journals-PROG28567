@@ -29,19 +29,29 @@ public class Player : MonoBehaviour
     #region Week3Content
 
     private Vector3 velocity;
+    private Vector3 AccelerationDirection; // direction for the acceleration
     public float maxSpeed; // max speed of the ship
     public float accelerationTime; // player will reach this speed after an inteval of time
+    public float deAccelerationTime; // time taken to deaccelerate
     public float acceleration; // intreval that the velocity moves by over time
-#endregion
+    public float deAcceleration; // deacceleration value
+    #endregion
 
     void Start()
     {
         acceleration = maxSpeed / accelerationTime; // sets a value for the acceleration to change by
+        deAcceleration = maxSpeed / deAccelerationTime;// sets the deacceleration so that it uses the speed and the deacceleration time
     }
     // Update is called once per frame
     void Update()
     {
+        
+        // moving the player //
         PlayerMovement(); // used to move the player
+        
+
+
+
         // checks if the b key is pressed
         if (Keyboard.current.bKey.wasPressedThisFrame)
         {
@@ -65,38 +75,47 @@ public class Player : MonoBehaviour
             WarpPlayer(enemyTransform,ratio);// warps the player a set distance based on the ratio to the enemy
         }
         DetectAsteroids(MaxRange, asteroidTransforms); // detects if asteroids are a certian distance from the player
-        
+        Debug.Log("velocity :" + velocity);
     }
     // used to move the player using their velocity
     public void PlayerMovement()
     {
+        // resets the direction vector each time you move
+        AccelerationDirection = Vector3.zero;
         // handles input that changes the velocity
+
         if (Keyboard.current.leftArrowKey.isPressed)
         {
-            velocity += Time.deltaTime * acceleration  * Vector3.left;
-            //velocity = new Vector3(-1, 0, 0); // moves left along x
+            AccelerationDirection = Vector3.left; // changes velocity to be left
         }
         else if (Keyboard.current.rightArrowKey.isPressed)
         {
-            velocity += Time.deltaTime * acceleration * Vector3.right;
-            //velocity = new Vector3(1, 0, 0);// moves right along x
+            AccelerationDirection = Vector3.right; // change velcoity to the right
         }
         else if (Keyboard.current.upArrowKey.isPressed)
         {
-            velocity += Time.deltaTime * acceleration * Vector3.up;
-            //velocity = new Vector3(0, 1, 0); // moves up along y
+            AccelerationDirection = Vector3.up; // changes velocity to up
         }
         else if (Keyboard.current.downArrowKey.isPressed)
         {
-            velocity += Time.deltaTime * acceleration * Vector3.down;// moves
-            //velocity = new Vector3(0, -1, 0); //moves down along y
+            AccelerationDirection = Vector3.down; // changes velocity to up
         }
-        transform.position += velocity * Time.deltaTime; //moves player over vecloity and time
-        //transform.position += velocity * Time.deltaTime * shipSpeed; // changes the players movement
-        if (velocity.magnitude > maxSpeed)
+        // checks if the velocity exceeds the max speed
+        if(velocity.magnitude > maxSpeed)
         {
-            velocity = maxSpeed * velocity.normalized;
+            velocity = velocity.normalized * maxSpeed; // sets the speed to exactly the max speed
         }
+        // checks if there is no input
+        if(AccelerationDirection == Vector3.zero)
+        {
+            velocity += -velocity.normalized * deAcceleration * Time.deltaTime; // deaccelerates the player over a set period of time when there is no input
+        }
+        // changes the velocity by taking its direction, muktiplying it by th acceleration, then setting it over gametime
+        velocity += AccelerationDirection.normalized * acceleration * Time.deltaTime;
+        // the displacement from whatever current position the ship is at equals the velocity * by the time
+        transform.position += velocity * Time.deltaTime;
+        
+
     }
     //detects if an asteroid is in range then draws a line to that asteroid
     public void DetectAsteroids(float inMaxRange,List<Transform> inAsteroids)
