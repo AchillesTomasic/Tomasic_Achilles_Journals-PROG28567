@@ -75,7 +75,6 @@ public class Player : MonoBehaviour
             WarpPlayer(enemyTransform,ratio);// warps the player a set distance based on the ratio to the enemy
         }
         DetectAsteroids(MaxRange, asteroidTransforms); // detects if asteroids are a certian distance from the player
-        Debug.Log("velocity :" + velocity);
     }
     // used to move the player using their velocity
     public void PlayerMovement()
