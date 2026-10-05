@@ -44,6 +44,10 @@ public class Player : MonoBehaviour
     private Color hitboxColour = Color.green; // colour of the hitbox
     public int circlePointsInput = 5; //changable number of circle points the player can input
     public float radiusInput; // radius of the circle for the hitbox
+    //powerups
+    public float powerupRadius; // radius that the power ups can spawn from
+    public int powerupCount;// number of powerups that can spawn
+    public GameObject powerupPrefab; // prefab for powerups
     #endregion
     void Start()
     {
@@ -82,8 +86,26 @@ public class Player : MonoBehaviour
             float ratio = Random.Range(0f, 1f); // sets random value between 0 and 1
             WarpPlayer(enemyTransform,ratio);// warps the player a set distance based on the ratio to the enemy
         }
+        //checks if v is pressed
+        if (Keyboard.current.vKey.wasPressedThisFrame)
+        {
+            SpawnPowerups(powerupRadius, powerupCount); //spawns powerups around the player using rotation
+        }
         DetectAsteroids(MaxRange, asteroidTransforms); // detects if asteroids are a certian distance from the player
         EnemyRadar(radiusInput,circlePointsInput);
+    }
+    // used to spawn power ups around the player using rotation from the radius
+    public void SpawnPowerups(float radius, int numberOfPowerups)
+    {
+        float equalAngle = 360f / numberOfPowerups; // gets an equal distance between points
+        float currentAngle = 0f;
+        for (int i = 0; i < numberOfPowerups; i++)
+        {
+            float currentRadians = currentAngle * Mathf.Deg2Rad;// converst the angle from degrees to radians 
+            Vector2 currentPoint = new Vector2(transform.position.x + Mathf.Cos(currentRadians) * radius, transform.position.y + Mathf.Sin(currentRadians) * radius); // sets the point of the powerup spawn relative to the player
+            Instantiate(powerupPrefab, currentPoint, Quaternion.identity); // creates a prefab at the currentpoint location
+            currentAngle += equalAngle; // adds to the angle
+        }
     }
     //used to create an enemy radius that detects if the enemy is within a radius distance of the player
     public void EnemyRadar(float radius, int circlePoints)
