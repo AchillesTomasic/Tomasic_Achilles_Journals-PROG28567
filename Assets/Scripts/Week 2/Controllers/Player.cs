@@ -36,7 +36,19 @@ public class Player : MonoBehaviour
     public float acceleration; // intreval that the velocity moves by over time
     public float deAcceleration; // deacceleration value
     #endregion
-
+    /// <summary>
+    /// week 4 content
+    /// </summary>
+    #region Week4Content
+    public List<Vector2> hitboxPointPos;
+    private Color hitboxColour = Color.green; // colour of the hitbox
+    public int circlePointsInput = 5; //changable number of circle points the player can input
+    public float radiusInput; // radius of the circle for the hitbox
+    //powerups
+    public float powerupRadius; // radius that the power ups can spawn from
+    public int powerupCount;// number of powerups that can spawn
+    public GameObject powerupPrefab; // prefab for powerups
+    #endregion
     void Start()
     {
         acceleration = maxSpeed / accelerationTime; // sets a value for the acceleration to change by
@@ -74,7 +86,60 @@ public class Player : MonoBehaviour
             float ratio = Random.Range(0f, 1f); // sets random value between 0 and 1
             WarpPlayer(enemyTransform,ratio);// warps the player a set distance based on the ratio to the enemy
         }
+        //checks if v is pressed
+        if (Keyboard.current.vKey.wasPressedThisFrame)
+        {
+            SpawnPowerups(powerupRadius, powerupCount); //spawns powerups around the player using rotation
+        }
         DetectAsteroids(MaxRange, asteroidTransforms); // detects if asteroids are a certian distance from the player
+        EnemyRadar(radiusInput,circlePointsInput);
+    }
+    // used to spawn power ups around the player using rotation from the radius
+    public void SpawnPowerups(float radius, int numberOfPowerups)
+    {
+        float equalAngle = 360f / numberOfPowerups; // gets an equal distance between points
+        float currentAngle = 0f;
+        for (int i = 0; i < numberOfPowerups; i++)
+        {
+            float currentRadians = currentAngle * Mathf.Deg2Rad;// converst the angle from degrees to radians 
+            Vector2 currentPoint = new Vector2(transform.position.x + Mathf.Cos(currentRadians) * radius, transform.position.y + Mathf.Sin(currentRadians) * radius); // sets the point of the powerup spawn relative to the player
+            Instantiate(powerupPrefab, currentPoint, Quaternion.identity); // creates a prefab at the currentpoint location
+            currentAngle += equalAngle; // adds to the angle
+        }
+    }
+    //used to create an enemy radius that detects if the enemy is within a radius distance of the player
+    public void EnemyRadar(float radius, int circlePoints)
+    {
+        //recycles the list so that it is empty upon use
+        hitboxPointPos.Clear();
+        float anlgeToRotate = 360f / circlePoints;// will get the angle that each circle point will spawn from to make a perfect circle
+        float currentAngle = 0f; // current angle to spawn points
+        
+        for (int i = 0; i < circlePoints; i++)
+        {
+            float currentRadians = currentAngle * Mathf.Deg2Rad;// converts the degrees to radians
+            Vector2 currentPoint = new Vector2(transform.position.x + Mathf.Cos(currentRadians) * radius, transform.position.y + Mathf.Sin(currentRadians) * radius); // sets the point relative to the player position
+            hitboxPointPos.Add(currentPoint);// adds the point to the list
+            currentAngle += anlgeToRotate;// adds to the angle
+            if(i > 0)
+            {
+                Debug.DrawLine(hitboxPointPos[i], hitboxPointPos[i - 1],hitboxColour); // draws the line for each point
+            }
+            if(i == circlePoints - 1)
+            {
+                Debug.DrawLine(hitboxPointPos[0], hitboxPointPos[i],hitboxColour); // draws the line from the final to the start
+            }
+        }
+        float enemyDistance = (enemyTransform.position - transform.position).magnitude;// distance between enemy transform and player
+        // changes the colour of the hitbox depending on how far from the player the enemy transform is
+        if (enemyDistance < radius)
+        {
+            hitboxColour = Color.red; /* changes hitbox to red */ 
+        }
+        else 
+        { 
+            hitboxColour = Color.green; /* changes hitbox to green */ 
+        }  
     }
     // used to move the player using their velocity
     public void PlayerMovement()
