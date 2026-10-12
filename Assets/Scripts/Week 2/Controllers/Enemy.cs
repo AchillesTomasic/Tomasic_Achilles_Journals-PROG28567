@@ -12,16 +12,37 @@ public class Enemy : MonoBehaviour
     public float accelerationTime; // used to detect time to accelerate
     public float acceleration;// used for the acceleration
 
+    public float newPointThreshold; // distance between the enemy position and the random position before it changes
+
 
     private void Start()
     {
-        randomMovePoint = new Vector3(Random.Range(-100, 100), Random.Range(-100, 100), 0); // chooses a random point somewhere on the map
+        randomMovePoint = new Vector3(0, Random.Range(0, Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y), 0); // chooses a random point somewhere along the y axis
         acceleration = maxSpeed / accelerationTime; // acceleration for the player constant value
     }
     private void Update()
     {
-        EnemyMovement();
+        // EnemyMovement(); used for a previous enemy movement script
+        enemyAsteroidMovement();// moves the enemyt
     }
+    // moves the enemy from its current location to the new randomly selected point and spawns an asteroid
+    public void enemyAsteroidMovement()
+    {
+        Vector3 enemyToPoint = (randomMovePoint - transform.position).normalized; // gets the direction that the enemy needs to move
+        velocity += enemyToPoint * acceleration * Time.deltaTime; // sets the velocity eqaul to the direction * acceleration
+        transform.position += velocity * Time.deltaTime; // moves the enemy using the velocity 
+        // caps off the speed 
+        if (velocity.magnitude > maxSpeed)
+        {
+            velocity = velocity.normalized * maxSpeed;// velocity is set to the max speed that the player can travel
+        }
+        // checks the magnitude of distance between the current position and the random movepoint
+        if ((randomMovePoint - transform.position).magnitude < newPointThreshold)
+        {
+            randomMovePoint = new Vector3(0, Random.Range(0, Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y), 0); // chooses a random point somewhere along the y axis
+        }
+    }
+
     public void EnemyMovement()
     {
         Vector3 playerToRandomPoint = randomMovePoint - playerPosition.transform.position; // displacement between the random point and the player
