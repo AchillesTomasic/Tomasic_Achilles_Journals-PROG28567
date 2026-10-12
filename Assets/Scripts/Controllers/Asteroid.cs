@@ -31,6 +31,7 @@ public class Asteroid : MonoBehaviour
         Vector3 distanceBeteenPlayerAndRandomPoint = randomPoint - transform.position;
         if (distanceBeteenPlayerAndRandomPoint.magnitude < arrivalDistance)
         {
+
             randomPoint = new Vector3(Random.Range(-maxFloatDistance, maxFloatDistance), Random.Range(-maxFloatDistance, maxFloatDistance), 0); // chooses a random point somewhere on the map;
         }
     }

@@ -14,16 +14,38 @@ public class Enemy : MonoBehaviour
 
     public float newPointThreshold; // distance between the enemy position and the random position before it changes
 
+    //implimentation 3
+    public int numberOfAsteroids; // sets the numbner of asteroids 
+    public float asteroidSpawnRadius; // used to set the spawn radius of the individual asteroids
+    public GameObject asteroidPrefab; // used as a prefab for the asteroids
+
 
     private void Start()
     {
+        SpiralCircleAsteroidPattern(numberOfAsteroids, asteroidSpawnRadius); // spawns asteroids
         randomMovePoint = new Vector3(0, Random.Range(0, Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y), 0); // chooses a random point somewhere along the y axis
         acceleration = maxSpeed / accelerationTime; // acceleration for the player constant value
     }
     private void Update()
     {
         // EnemyMovement(); used for a previous enemy movement script
-        enemyAsteroidMovement();// moves the enemyt
+        // implimentation 2
+        //enemyAsteroidMovement();// moves the enemy
+        
+
+    }
+    //spawns asteroids in a circle pattern
+    public void SpiralCircleAsteroidPattern(int numberOfAsteroids, float radius)
+    {
+        float angleBetweenAsteroids = 360f /numberOfAsteroids; // gets the angle between each asteroid to space equally
+        float radiansBetweenAsteroids = angleBetweenAsteroids * Mathf.Deg2Rad; // converts angle to radians
+        float currentAngle = 0; // current angle to spawn a asteroid
+        for (int i = 0; i < numberOfAsteroids; i++)
+        {
+            Vector2 newPoint = new Vector2(transform.position.x + Mathf.Cos(currentAngle) * radius, transform.position.y + Mathf.Sin(currentAngle) * radius);// creates a point along the circle
+            Instantiate(asteroidPrefab, newPoint, Quaternion.identity);// spawns an asteroid at the created point
+            currentAngle += radiansBetweenAsteroids; // adds to the current angle
+        }
     }
     // moves the enemy from its current location to the new randomly selected point and spawns an asteroid
     public void enemyAsteroidMovement()
