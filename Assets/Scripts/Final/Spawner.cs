@@ -24,7 +24,6 @@ public class Spawner : MonoBehaviour
         asteroidsInScene = new asteroidData[asteroidsPool]; // sets the number of asteroids on an array
         AsteroidSpawner(asteroidsPool); // spawns all of the asteroids
     }
-
     // Update is called once per frame
     void Update()
     {
