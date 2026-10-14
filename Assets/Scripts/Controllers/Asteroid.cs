@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
+    public int WhichMechanic; // determines which mechanic this asteroid is used for 0 = mechanic 1, 1 = mechanic 2, 2 = demonstration mechanics
     public Vector3 randomPoint;
     public float moveSpeed;
     public float arrivalDistance;
@@ -31,26 +32,47 @@ public class Asteroid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isCenterAsteroid)
+        
+        
+        // used for asteroids that spawn then move to the right over acceleration (mechanic 1)
+        if(WhichMechanic == 0)
         {
-            RotatingAsteroidSpawner(radiusForCircleAsteroid);
-            isCenterAsteroid = false;
-        }
-        //AsteroidMovement(); used during a previous journal
 
-        AsteroidMovementRotationPattern();
+        }
+
+
+
+        //if (isCenterAsteroid)
+        //{
+        //    RotatingAsteroidSpawner(radiusForCircleAsteroid);
+        //    isCenterAsteroid = false;
+        //}
+        //AsteroidMovement(); used during a previous journal
+        // used for documentation section
+        //if(WhichMechanic == 2){
+        // AsteroidMovementRotationPattern();
+        //}
     }
+    public void VectorAsteroidMovement()
+    {
+
+        //
+    }
+
     public void RotatingAsteroidSpawner(float radius)
     {
-        float angleBetweenAsteroids = (360f / 2) * Mathf.Deg2Rad; // gets the angle between each asteroid to space equally
-        float currentAngle = 0; // current angle to spawn a asteroid
-        // adds the asteroids
-        for (int i = 0; i < 2; i++) 
+        if (WhichMechanic == 2)
         {
-            Vector2 newpoint = new Vector2(transform.position.x + Mathf.Cos(currentAngle) * radius, transform.position.y + Mathf.Sin(currentAngle) * radius);// creates a point along the circle
-            GameObject asteroid = Instantiate(asteroidPrefab, newpoint, Quaternion.identity); // spawns the circling asteroids
-            asteroid.GetComponent<Asteroid>().isCenterAsteroid = false;
-            currentAngle += angleBetweenAsteroids;// incriemnts value of the angle between asteroids
+            float angleBetweenAsteroids = (360f / 2) * Mathf.Deg2Rad; // gets the angle between each asteroid to space equally
+            float currentAngle = 0; // current angle to spawn a asteroid
+                                    // adds the asteroids
+            for (int i = 0; i < 2; i++)
+            {
+                Vector2 newpoint = new Vector2(transform.position.x + Mathf.Cos(currentAngle) * radius, transform.position.y + Mathf.Sin(currentAngle) * radius);// creates a point along the circle
+                GameObject asteroid = Instantiate(asteroidPrefab, newpoint, Quaternion.identity); // spawns the circling asteroids
+                asteroid.GetComponent<Asteroid>().isCenterAsteroid = false;
+                currentAngle += angleBetweenAsteroids;// incriemnts value of the angle between asteroids
+            }
         }
     }
     // used for the asteroid movement on the asteroid pattern
