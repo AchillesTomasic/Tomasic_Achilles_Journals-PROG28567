@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour
     {
         SpiralCircleAsteroidPattern(numberOfAsteroids, asteroidSpawnRadius); // spawns asteroids
         Vector2 ScreenSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)); // value to hold the screen size
-        randomMovePoint = new Vector3(-ScreenSize.x, Random.Range(-ScreenSize.y, ScreenSize.y), 0); // chooses a random point somewhere along the y axis
+        randomMovePoint = new Vector3(-ScreenSize.x * 0.9f, Random.Range(-ScreenSize.y, ScreenSize.y), 0); // chooses a random point somewhere along the y axis
         acceleration = maxSpeed / accelerationTime; // acceleration for the player constant value
     }
     private void Update()
@@ -62,6 +62,8 @@ public class Enemy : MonoBehaviour
         // checks the magnitude of distance between the current position and the random movepoint
         if ((randomMovePoint - transform.position).magnitude < newPointThreshold)
         {
+            GameObject asteroid = Instantiate(asteroidPrefab, randomMovePoint, Quaternion.identity); //creates an asteroid at the new position selected
+            asteroid.GetComponent<Asteroid>().WhichMechanic = 0; // sets this asteroid to mechanic 1
             Vector2 ScreenSize = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)); // value to hold the screen size
             randomMovePoint = new Vector3(-ScreenSize.x * 0.9f,Random.Range(-ScreenSize.y, ScreenSize.y) , 0); // chooses a random point somewhere along the y axis
         }

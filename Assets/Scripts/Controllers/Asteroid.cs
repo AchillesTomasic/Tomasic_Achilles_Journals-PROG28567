@@ -37,7 +37,7 @@ public class Asteroid : MonoBehaviour
         // used for asteroids that spawn then move to the right over acceleration (mechanic 1)
         if(WhichMechanic == 0)
         {
-
+            VectorAsteroidMovement(); // moves the asteroids left
         }
 
 
@@ -55,8 +55,13 @@ public class Asteroid : MonoBehaviour
     }
     public void VectorAsteroidMovement()
     {
+        velocity += Vector3.right * acceleration * Time.deltaTime;// changes the velocity over accerleration
+        transform.position += velocity * Time.deltaTime; // moves the player over a velocity
+        if(velocity.magnitude > maxSpeed)
+        {
+           velocity = velocity.normalized * maxSpeed; //caps the speed that the player moves
+        }
 
-        //
     }
 
     public void RotatingAsteroidSpawner(float radius)
