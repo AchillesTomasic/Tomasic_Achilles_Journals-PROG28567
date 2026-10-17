@@ -39,7 +39,10 @@ public class Asteroid : MonoBehaviour
         {
             VectorAsteroidMovement(); // moves the asteroids left
         }
-
+        if(WhichMechanic == 1)
+        {
+            RotatingAsteroidSlowly(20);
+        }
 
 
         //if (isCenterAsteroid)
@@ -52,6 +55,12 @@ public class Asteroid : MonoBehaviour
         //if(WhichMechanic == 2){
         // AsteroidMovementRotationPattern();
         //}
+    }
+    public void RotatingAsteroidSlowly(float angleOfRotation)
+    {
+        transform.Rotate(0, 0, angleOfRotation * Time.deltaTime); // rotates the asteroids
+        velocity += acceleration * transform.up * Time.deltaTime;
+        transform.position += velocity * Time.deltaTime; // moves the asteroid to the newpoint
     }
     public void VectorAsteroidMovement()
     {

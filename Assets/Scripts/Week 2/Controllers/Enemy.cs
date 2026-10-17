@@ -44,7 +44,11 @@ public class Enemy : MonoBehaviour
         for (int i = 0; i < numberOfAsteroids; i++)
         {
             Vector2 newPoint = new Vector2(transform.position.x + Mathf.Cos(currentAngle) * radius, transform.position.y + Mathf.Sin(currentAngle) * radius);// creates a point along the circle
-            Instantiate(asteroidPrefab, newPoint, Quaternion.identity);// spawns an asteroid at the created point
+            GameObject asteroid =  Instantiate(asteroidPrefab, newPoint, Quaternion.identity);// spawns an asteroid at the created point
+            Vector2 direction = -(transform.position - asteroid.transform.position).normalized; // obtains the opposite direction from the center
+            float newAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // obtains the new angle that the ship needs to rotate towards
+            asteroid.transform.Rotate(0, 0, newAngle); // rotates the asteroid the direction of the angle spawned
+            asteroid.GetComponent<Asteroid>().WhichMechanic = 1; // swaps so that the asteroids movementpath uses the mechanic 1 formula
             currentAngle += radiansBetweenAsteroids; // adds to the current angle
         }
     }
