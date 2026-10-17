@@ -9,8 +9,36 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2145097153900650356, guid: 462add3d0f7c62a4682e9c053b00ec93, type: 3}
+      propertyPath: maxSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2145097153900650356, guid: 462add3d0f7c62a4682e9c053b00ec93, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2145097153900650356, guid: 462add3d0f7c62a4682e9c053b00ec93, type: 3}
+      propertyPath: moveSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2145097153900650356, guid: 462add3d0f7c62a4682e9c053b00ec93, type: 3}
+      propertyPath: acceleration
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2145097153900650356, guid: 462add3d0f7c62a4682e9c053b00ec93, type: 3}
+      propertyPath: WhichMechanic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2145097153900650356, guid: 462add3d0f7c62a4682e9c053b00ec93, type: 3}
+      propertyPath: asteroidPrefab
+      value: 
+      objectReference: {fileID: 7258378357002855905, guid: 8d1e6cbbd1e8b1449b9bb75118cb8435, type: 3}
+    - target: {fileID: 2145097153900650356, guid: 462add3d0f7c62a4682e9c053b00ec93, type: 3}
+      propertyPath: timeToReachMaxAcc
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2145097153900650356, guid: 462add3d0f7c62a4682e9c053b00ec93, type: 3}
+      propertyPath: radiusForCircleAsteroid
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4194190890010494449, guid: 462add3d0f7c62a4682e9c053b00ec93, type: 3}
       propertyPath: m_LocalPosition.x
